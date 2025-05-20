@@ -31,6 +31,9 @@
 
 This repository contains the implementation and results of our research on sparse parameter-efficient fine-tuning methods for large pre-trained models. We explore the benefits of incorporating structured sparsity into PEFT approaches to achieve better parameter efficiency while maintaining or improving performance.
 
+
+Note: There are some issues that are going to be fixed shortly.
+
 ## Key Contributions
 
 - Introduction of novel sparse PEFT methods that combine the benefits of sparse neural networks with parameter-efficient fine-tuning
