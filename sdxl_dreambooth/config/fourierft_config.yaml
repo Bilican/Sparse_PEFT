@@ -1,0 +1,19 @@
+# PEFT Adapter Configuration for FourierFT
+
+# Adapter type
+adapter_type: "fourierft"  # Fourier Feature Transform adapter
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+
+# General adapter parameters
+modules_to_save: null
+
+# FourierFT specific parameters
+n_frequency: 2592       # Number of learnable frequencies for DFT
+scaling: 120             # Scaling value for delta W matrix (like lora_alpha)
+random_loc_seed: 777     # Seed for random location of frequencies

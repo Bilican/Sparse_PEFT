@@ -1,0 +1,13 @@
+# Adapter type
+adapter_type: "adalora"  # Using AdaLora adapter
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+# AdaLora specific parameters
+target_r: 1        # Target average rank of incremental matrix
+init_r: 2         # Initial rank for each incremental matrix
+alpha: 4

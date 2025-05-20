@@ -1,0 +1,18 @@
+# PEFT Adapter Configuration for WaveFT
+
+# Adapter type
+adapter_type: "waveft"  # Wavelet Feature Transform adapter
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+
+# WaveFT specific parameters
+n_frequency: 2592        # Number of frequencies/wavelet coefficients
+scaling: 25              # Scaling factor for the adapter
+wavelet_family: "db1"     # Wavelet family to use (e.g., "db1", "haar", "sym2")
+use_idwt: true            # Whether to use inverse discrete wavelet transform
+proportional_parameters: false  # Whether to use proportional parameters 

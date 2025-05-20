@@ -86,6 +86,10 @@ Comprehensive evaluation metrics across different tasks and model configurations
   - `lora/`: LoRA-specific results and visualizations
   - `dataset/`: Dataset examples and visualizations
 
+## Dataset Acknowledgment
+
+The dataset used in this work is from the [DreamBooth repository](https://github.com/google/dreambooth) by Google. We use their dataset of subjects for our fine-tuning experiments to maintain consistency with prior work and enable fair comparison.
+
 ## Citation
 
 If you find this work useful, please cite our paper:

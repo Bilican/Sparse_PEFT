@@ -1,0 +1,15 @@
+# PEFT Adapter Configuration for LoHa
+
+# Adapter type
+adapter_type: "loha"  # Low-rank Hadamard Product adapter
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+
+# LoHa specific parameters
+rank: 1             # LoHa rank
+alpha: 1            # LoHa alpha for scaling

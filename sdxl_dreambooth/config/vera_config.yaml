@@ -1,0 +1,17 @@
+# PEFT Adapter Configuration for Vera
+
+# Adapter type
+adapter_type: "vera"  # Very Efficient Rank Adaptation
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+
+# General adapter parameters
+modules_to_save: null
+
+# Vera specific parameters
+rank: 1402           # Vera parameter dimension (rank) - typically higher than LoRA

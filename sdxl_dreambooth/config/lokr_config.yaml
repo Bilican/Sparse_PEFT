@@ -1,0 +1,13 @@
+adapter_type: "lokr"  # Low-rank Kronecker Product adapter
+
+# Target modules to apply adapters to
+target_modules:
+  - "to_q"
+  - "to_k"
+  - "to_v"
+  - "to_out.0"
+
+
+# LoKr specific parameters
+rank: 20              # LoKr rank
+alpha: 20             # LoKr alpha for scaling

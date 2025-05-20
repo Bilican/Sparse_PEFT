@@ -1,0 +1,14 @@
+# Dummy dataloader configuration for testing
+instance_data_dir: "./dataset/dog"  # Directory with training images
+instance_prompt: "a photo of sks dog"  # Prompt for instance images
+resolution: 1024  # Image resolution
+center_crop: true  # Center crop images
+random_flip: true  # Random flip augmentation
+train_batch_size: 4  # Batch size
+num_class_images: 0  # Number of class images to generate
+class_data_dir: ""  # Directory with class images
+class_prompt: ""  # Prompt for class images
+gradient_accumulation_steps: 1  # Gradient accumulation steps
+ema_decay: 0.0  # EMA decay for LoRA weights
+tokenizer_max_length: 77  # Max length of tokenized inputs
+clip_skip: 0  # Number of CLIP layers to skip 
