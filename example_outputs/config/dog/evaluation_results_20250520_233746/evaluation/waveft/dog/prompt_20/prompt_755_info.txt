@@ -1,0 +1,5 @@
+Prompt: a zjw dog in a purple wizard outfit
+Negative Prompt: low quality, bad anatomy, worst quality, low res, blurry, distorted, deformed, ugly, duplicate, morbid, mutilated, mutation, disfigured, poorly drawn face, bad proportions
+Guidance Scale: 7.5
+Inference Steps: 30
+Seed: 45
