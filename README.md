@@ -1,7 +1,30 @@
 # Sparse_PEFT: Exploring Sparsity for Parameter-Efficient Fine-Tuning | [[Paper]](https://arxiv.org/abs/2505.12532)
 
 <div align="center">
-  <img src="assets/method-1.png" width="700">
+  <table>
+    <tr>
+      <td><img src="assets/dataset/colorful_sneaker.jpg" width="120"></td>
+      <td><img src="assets/dataset/wolf_plushie.jpg" width="120"></td>
+      <td><img src="assets/dataset/dog6.jpg" width="120"></td>
+      <td><img src="assets/dataset/cat2.jpg" width="120"></td>
+      <td><img src="assets/dataset/dog8.jpg" width="120"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/waveft/prompt_9598_sample_2_seed_44.png" width="120"></td>
+      <td><img src="assets/waveft/prompt_5728_sample_1_seed_43.png" width="120"></td>
+      <td><img src="assets/waveft/prompt_7595_sample_0_seed_42.png" width="120"></td>
+      <td><img src="assets/waveft/prompt_4769_sample_3_seed_45.png" width="120"></td>
+      <td><img src="assets/waveft/prompt_1569_sample_3_seed_45.png" width="120"></td>
+    </tr>
+    <tr>
+      <td><img src="assets/lora/prompt_1258_sample_2_seed_44.png" width="120"></td>
+      <td><img src="assets/lora/prompt_1757_sample_1_seed_43.png" width="120"></td>
+      <td><img src="assets/lora/prompt_2257_sample_0_seed_42.png" width="120"></td>
+      <td><img src="assets/lora/prompt_6648_sample_3_seed_45.png" width="120"></td>
+      <td><img src="assets/lora/prompt_8189_sample_3_seed_45.png" width="120"></td>
+    </tr>
+  </table>
+  <p>The original images (top), WaveFT results (middle), LoRA results (bottom).</p>
 </div>
 
 ## Overview
@@ -15,6 +38,12 @@ This repository contains the implementation and results of our research on spars
 - Development of WaveFT, a wavelet-based approach to sparse fine-tuning
 - Extensive comparison with existing methods like LoRA (Low-Rank Adaptation)
 - Analysis of performance vs. parameter count trade-offs
+
+## Method
+
+<div align="center">
+  <img src="assets/method-1.png" width="700">
+</div>
 
 ## Results
 
@@ -50,35 +79,6 @@ WaveFT leverages wavelet transformations to identify important parameter subspac
 
 Comprehensive evaluation metrics across different tasks and model configurations.
 
-## Image Generation Comparison
-
-<div align="center">
-  <table>
-    <tr>
-      <td><img src="assets/dataset/colorful_sneaker.jpg" width="120"></td>
-      <td><img src="assets/dataset/wolf_plushie.jpg" width="120"></td>
-      <td><img src="assets/dataset/dog6.jpg" width="120"></td>
-      <td><img src="assets/dataset/cat2.jpg" width="120"></td>
-      <td><img src="assets/dataset/dog8.jpg" width="120"></td>
-    </tr>
-    <tr>
-      <td><img src="assets/waveft/prompt_9598_sample_2_seed_44.png" width="120"></td>
-      <td><img src="assets/waveft/prompt_5728_sample_1_seed_43.png" width="120"></td>
-      <td><img src="assets/waveft/prompt_7595_sample_0_seed_42.png" width="120"></td>
-      <td><img src="assets/waveft/prompt_4769_sample_3_seed_45.png" width="120"></td>
-      <td><img src="assets/waveft/prompt_1569_sample_3_seed_45.png" width="120"></td>
-    </tr>
-    <tr>
-      <td><img src="assets/lora/prompt_1258_sample_2_seed_44.png" width="120"></td>
-      <td><img src="assets/lora/prompt_1757_sample_1_seed_43.png" width="120"></td>
-      <td><img src="assets/lora/prompt_2257_sample_0_seed_42.png" width="120"></td>
-      <td><img src="assets/lora/prompt_6648_sample_3_seed_45.png" width="120"></td>
-      <td><img src="assets/lora/prompt_8189_sample_3_seed_45.png" width="120"></td>
-    </tr>
-  </table>
-  <p>The original images (top), WaveFT results (middle), LoRA results (bottom).</p>
-</div>
-
 ## Directory Structure
 
 - `assets/`: Visualizations and figures
@@ -103,6 +103,8 @@ If you find this work useful, please cite our paper:
 ```
 
 ## License
+
+This project is licensed under the [Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/) license.
 
 
 
