@@ -1,7 +1,4 @@
 # --- Configuration --- #
-# Define the AdaLoRA alpha values to test
-#ALPHAS=(2 4 8 16 32 64 128 256 512)
-#ALPHAS=(64 128 256 512)
 ALPHAS=(32)
 # Define fixed AdaLoRA parameters for this search (Adjust as needed based on your base config)
 RANK=1 # Example: Read from your original adalora_config.yaml or set desired fixed rank

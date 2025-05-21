@@ -52,7 +52,7 @@ Comparison of different PEFT methods including our novel sparse approaches again
   <img src="assets/rank_vs_p_combined_with_full_rank_linear.png" width="600">
 </div>
 
-Analysis of the relationship between rank and sparsity parameters in our methods, showing how different configurations affect model performance.
+Analysis of the relationship between rank and sparsity parameters in our methods.
 
 ## WaveFT: Wavelet-based Fine-Tuning
 

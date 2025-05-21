@@ -24,7 +24,7 @@ prior_loss_weight: 1.0  # Only used with prior preservation
 use_8bit_adam: false
 use_gradient_checkpointing: true
 enable_xformers_memory_efficient_attention: true
-mixed_precision: "bf16"  # Can be "no", "fp16", or "bf16"
+mixed_precision: "no"  # Can be "no", "fp16", or "bf16"
 
 # Text encoder training settings
 train_text_encoder: false
