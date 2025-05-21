@@ -10,4 +10,4 @@ target_modules:
 # AdaLora specific parameters
 target_r: 1        # Target average rank of incremental matrix
 init_r: 2         # Initial rank for each incremental matrix
-alpha: 4
+alpha: 32

@@ -15,5 +15,4 @@ modules_to_save: null
 
 # FourierFT specific parameters
 n_frequency: 2592       # Number of learnable frequencies for DFT
-scaling: 120             # Scaling value for delta W matrix (like lora_alpha)
-random_loc_seed: 777     # Seed for random location of frequencies
+scaling: 32             # Scaling value for delta W matrix (like lora_alpha)

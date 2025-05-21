@@ -16,6 +16,6 @@ module_dropout: 0.0
 modules_to_save: null
 
 # LoRA specific parameters
-rank: 8              # LoRA rank
-alpha: 8             # LoRA alpha for scaling
+rank: 1              # LoRA rank
+alpha: 1             # LoRA alpha for scaling
 bias: "none"         # Bias type for LoRA. Can be 'none', 'all' or 'lora_only' 

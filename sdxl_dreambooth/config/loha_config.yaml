@@ -12,4 +12,4 @@ target_modules:
 
 # LoHa specific parameters
 rank: 1             # LoHa rank
-alpha: 1            # LoHa alpha for scaling
+alpha: 64            # LoHa alpha for scaling

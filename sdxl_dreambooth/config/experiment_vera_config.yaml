@@ -1,7 +1,7 @@
 # Experiment Configuration for SDXL DreamBooth with Vera Adapter
 
 # Base model configuration
-pretrained_model_path: "../pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b"
+pretrained_model_path: "stabilityai/stable-diffusion-xl-base-1.0"
 
 # Dataset configuration
 dataset_dir: "../dataset"

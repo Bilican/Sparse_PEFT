@@ -10,4 +10,4 @@ target_modules:
 
 # LoKr specific parameters
 rank: 20              # LoKr rank
-alpha: 20             # LoKr alpha for scaling
+alpha: 192             # LoKr alpha for scaling

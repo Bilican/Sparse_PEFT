@@ -31,7 +31,7 @@ class WaveFTConfig(PeftConfig):
 
     Args:
         n_frequency (`int`):
-            Number of learnable wavelet coefficients (frequencies) for the Discrete Wavelet Transform (DWT).
+            Number of learnable wavelet coefficients for the Discrete Wavelet Transform (DWT).
             'n_frequency' is an integer that is greater than 0 and less than or equal to the
             total number of elements in the original weight matrix (d_out * d_in).
             This parameter directly controls the number of trainable parameters for each adapted layer.
