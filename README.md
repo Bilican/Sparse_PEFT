@@ -37,8 +37,23 @@ This repository contains the implementation and results of our research on spars
   <img src="assets/method-1.png" width="700">
 </div>
 
+## Usage
 
-### PEFT Method Comparison
+To use this repository, follow these steps:
+
+1.  **Clone the repository:**
+    ```bash
+    git clone https://github.com/your-username/Sparse_PEFT.git
+    cd Sparse_PEFT
+    ```
+2.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Run experiments:**
+    ```bash
+    bash personalization.sh
+    ```
 
 <div align="center">
   <img src="assets/peft_comparison.png" width="600">
@@ -77,10 +92,39 @@ Comprehensive evaluation metrics across different tasks and model configurations
   - `lora/`: LoRA-specific results and visualizations
   - `dataset/`: Sample images used in the visualizations
 - `dataset/`: Full dataset of subject images organized by category
-- `peft/`: Modified version of Hugging Face PEFT to include WaveFT adapter. 
+  - Contains image data organized by instance names (dog, cat, etc.)
+  - `prompts_and_classes_obj.txt`: Mapping between object instances and their classes
+  - `prompts_and_classes_live.txt`: Mapping between live instances and their classes
+- `peft/`: Modified version of Hugging Face PEFT to include WaveFT adapter
 - `PyTorch-Wavelet-Toolbox-Custom/`: Modified version of the PyTorch Wavelet Toolbox for our implementation
 - `sdxl_dreambooth/`: Code for fine-tuning Stable Diffusion XL with our methods
+  - `train_sdxl.py`: Main training script
+  - `run_evaluation.py`: Script for evaluating trained models
+  - `evaluation.py`: Evaluation utilities
+  - `dataset_loader.py`: Data loading utilities
+  - `training_utils.py`: Training helper functions
+  - `config/`: Configuration files for different PEFT methods
+    - `waveft_config.yaml`: Configuration for WaveFT
+    - `lora_config.yaml`: Configuration for LoRA
+    - `adalora_config.yaml`: Configuration for AdaLoRA
+    - `vera_config.yaml`: Configuration for VERA
+    - `loha_config.yaml`: Configuration for LoHA
+    - `lokr_config.yaml`: Configuration for LoKr
+    - `fourierft_config.yaml`: Configuration for FourierFT
+    - `training_config.yaml`: Base training configuration
+    - `experiment_config.yaml`: General experiment settings
+- `other_scripts/`: Additional training scripts for different PEFT methods
+  - `lora_personalization.sh`: LoRA training script
+  - `adalora_personalization.sh`: AdaLoRA training script
+  - `vera_personalization.sh`: VERA training script
+  - `loha_personalization.sh`: LoHA training script
+  - `lokr_personalization.sh`: LoKr training script
+  - `fourierft_personalization.sh`: FourierFT training script
+  - `lora_rank_test.sh`: Script for testing different LoRA ranks
+- `outputs/`: Directory for storing training outputs and generated images
+  - `config/`: Configurations used for training
 - `example_outputs/`: Example generation outputs and configuration files
+- `personalization.sh`: Main script to run training and evaluation
 - `requirements.txt`: Python dependencies needed to run the code
 
 ## Dataset Acknowledgment
