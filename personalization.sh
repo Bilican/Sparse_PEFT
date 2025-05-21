@@ -17,6 +17,10 @@ ABS_TRAINING_OUTPUT_DIR="${PROJECT_DIR}/${TRAINING_OUTPUT_DIR}"
 # Use a single base training config, specific LR/steps will come from adapter_config.yaml
 TRAINING_CONFIG_PATH="./sdxl_dreambooth/config/training_config.yaml"
 
+# Set Hugging Face cache directory to be local to the project
+export HF_HOME="${PROJECT_DIR}/.cache/huggingface"
+mkdir -p "${HF_HOME}"
+
 echo "======================================="
 echo "Main Configuration"
 echo "Adapter Config: ${ADAPTER_CONFIG_PATH}"
@@ -65,7 +69,7 @@ SEED=42
 GUIDANCE_SCALE=7.5
 INFERENCE_STEPS=30
 MIXED_PRECISION="bf16"
-PRETRAINED_MODEL="./pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b"
+PRETRAINED_MODEL="stabilityai/stable-diffusion-xl-base-1.0"
 CONFIG_PATH="./sdxl_dreambooth/config/experiment_config.yaml"
 
 # Process object instances

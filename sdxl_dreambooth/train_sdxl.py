@@ -237,7 +237,9 @@ def setup_model(config, accelerator):
     logger.info(f"Loading UNet from {config['pretrained_model_name_or_path']}")
     unet = UNet2DConditionModel.from_pretrained(
         config['pretrained_model_name_or_path'], 
-        subfolder="unet"
+        subfolder="unet",
+        variant="fp16",
+        use_safetensors=True
     )
     
     # Load VAE
