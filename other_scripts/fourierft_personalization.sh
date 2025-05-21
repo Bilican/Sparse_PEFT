@@ -1,4 +1,3 @@
-
 # --- Configuration --- #
 # Define the FourierFT scaling values to test
 SCALES=(64) # Example range, adjust as needed
@@ -20,10 +19,15 @@ N_FREQUENCY=2592
 # --- Derived Paths --- #
 PROJECT_DIR=$(pwd) # Capture project dir early
 
+# Set Hugging Face cache directory to be local to the project
+export HF_HOME="${PROJECT_DIR}/.cache/huggingface"
+mkdir -p "${HF_HOME}"
+
 echo "======================================="
 echo "Starting FourierFT Scaling Hyperparameter Search" # Updated text
 echo "Scales to test: ${SCALES[@]}"
 echo "Base Output Dir: ${PROJECT_DIR}/${BASE_OUTPUT_DIR}"
+echo "HF Cache Dir: ${HF_HOME}"
 echo "======================================="
 
 # Redefine PROJECT_DIR after cd
@@ -71,7 +75,7 @@ MAX_PROMPTS=25 # Increased max prompts for FourierFT eval
 SEED=42
 GUIDANCE_SCALE=7.5
 INFERENCE_STEPS=30
-PRETRAINED_MODEL="${PROJECT_DIR}/pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b" # Use absolute/relative from PROJECT_DIR
+PRETRAINED_MODEL="stabilityai/stable-diffusion-xl-base-1.0" # Use model ID to leverage HF_HOME cache
 USE_UNIQUE_SEEDS=true # Add this for consistency if desired
 
 # --- Main Loop for Scales --- #

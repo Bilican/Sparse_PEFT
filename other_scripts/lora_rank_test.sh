@@ -1,7 +1,7 @@
 # --- Configuration --- #
 # Define ranks to test
-#RANKS=(1 2 4)
-RANKS=(1 2 3 4)
+#RANKS=(1 2 3)
+RANKS=(1)
 # Instance and Prompt Definitions (Names only)
 # OBJECT_INSTANCES=("teapot" "can" "duck_toy" "robot_toy")
 OBJECT_INSTANCES=(
@@ -38,10 +38,13 @@ echo "Ranks to test: ${RANKS[@]}"
 echo "======================================="
 
 
-
 # --- Define Paths AFTER CD --- #
 PROJECT_DIR=$(pwd) 
 echo "Current working directory: ${PROJECT_DIR}"
+
+# Set Hugging Face cache directory to be local to the project
+export HF_HOME="${PROJECT_DIR}/.cache/huggingface"
+mkdir -p "${HF_HOME}"
 
 # Base directory for all outputs (relative to PROJECT_DIR)
 BASE_OUTPUT_DIR="./outputs_lora_gpu_test"
@@ -55,7 +58,9 @@ LIVE_PROMPTS_FILE="/home/abilican21/Peft-League/dataset/${LIVE_PROMPT_FILENAME}"
 # Default LoRA target modules
 LORA_TARGET_MODULES='["to_q", "to_k", "to_v", "to_out.0"]'
 # Pretrained Model Path (relative to PROJECT_DIR)
-PRETRAINED_MODEL="/home/abilican21/Peft-League/pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b" # Use absolute path for robustness
+PRETRAINED_MODEL="stabilityai/stable-diffusion-xl-base-1.0" # Use model ID to leverage HF_HOME cache
+
+echo "HF Cache Dir: ${HF_HOME}"
 
 # --- Function to get class name --- #
 get_class_name() {

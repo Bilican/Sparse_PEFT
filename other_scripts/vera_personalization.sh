@@ -1,7 +1,7 @@
 # --- Configuration --- #
 # Define the specific learning rates to test numerically
 #LEARNING_RATES=(0.0002 0.0004 0.0008 0.0016 0.0032 0.0064 0.0128 0.0256)
-LEARNING_RATES=(0.0032 0.0064)
+LEARNING_RATES=(0.0032)
 #TEXT_ENCODER_LRS=(0.0001 0.0002 0.0004 0.0008 0.0016 0.0032 0.0064 0.0128)
 # Define the fixed adapter config for this run (VeRA)
 ADAPTER_CONFIG_PATH="./sdxl_dreambooth/config/vera_config.yaml" # Fixed VeRA config
@@ -15,13 +15,17 @@ EVALUATION_CONFIG_PATH="./sdxl_dreambooth/config/experiment_config.yaml"
 # --- Derived Paths --- #
 PROJECT_DIR=$(pwd) # Capture project dir early
 
+# Set Hugging Face cache directory to be local to the project
+export HF_HOME="${PROJECT_DIR}/.cache/huggingface"
+mkdir -p "${HF_HOME}"
+
 echo "======================================="
 echo "Starting VeRA Learning Rate Hyperparameter Search"
 echo "Learning Rates to test: ${LEARNING_RATES[@]}"
-echo "Text Encoder LRs to test: ${TEXT_ENCODER_LRS[@]}"
 echo "Fixed Adapter Config: ${ADAPTER_CONFIG_PATH}"
 echo "Base Training Config: ${PROJECT_DIR}/${BASE_TRAINING_CONFIG_PATH}"
 echo "Base Output Dir: ${PROJECT_DIR}/${BASE_OUTPUT_DIR}"
+echo "HF Cache Dir: ${HF_HOME}"
 echo "======================================="
 
 
@@ -66,7 +70,7 @@ MAX_PROMPTS=25 # Adjust if needed
 SEED=42
 GUIDANCE_SCALE=7.5
 INFERENCE_STEPS=30
-PRETRAINED_MODEL="${PROJECT_DIR}/pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b" # Use absolute/relative from PROJECT_DIR (ensure this is correct)
+PRETRAINED_MODEL="stabilityai/stable-diffusion-xl-base-1.0" # Use absolute/relative from PROJECT_DIR (ensure this is correct)
 USE_UNIQUE_SEEDS=true # Set evaluation unique seeds flag
 # UNIQUE_TOKEN is already defined above
 
@@ -79,7 +83,6 @@ for (( i=0; i<${num_lrs}; i++ )); do
 
     # Get current learning rates from arrays
     CURRENT_LR=${LEARNING_RATES[$i]}
-    CURRENT_TEXT_LR=${TEXT_ENCODER_LRS[$i]}
 
     # Construct config name and temporary training config file path
     # Use LR value directly in name for clarity, replacing dots with 'p' if needed for filename safety
@@ -91,7 +94,6 @@ for (( i=0; i<${num_lrs}; i++ )); do
     echo "***************************************"
     echo "Processing Learning Rate index: ${i}"
     echo "Current LR: ${CURRENT_LR}"
-    echo "Current Text LR: ${CURRENT_TEXT_LR}"
     echo "Config Name:     ${CONFIG_NAME}"
     echo "Temp Config File: ${TEMP_TRAINING_CONFIG_PATH}"
     echo "***************************************"

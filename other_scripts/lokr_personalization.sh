@@ -1,6 +1,6 @@
 # --- Configuration --- #
 # Define the LoKR alpha values to test
-ALPHAS=(160)
+ALPHAS=(192)
 # Define the fixed LoKR rank (or dim) for this search - Assuming 'rank' like LoHa
 RANK=20 # Or maybe LOKR_DIM=1 if LoKR uses 'dim'
 # Base directory for all outputs (Updated for LoKR alpha search)
@@ -15,11 +15,16 @@ LOKR_TARGET_MODULES='["to_q", "to_k", "to_v", "to_out.0"]'
 # --- Derived Paths --- #
 PROJECT_DIR=$(pwd) # Capture project dir early
 
+# Set Hugging Face cache directory to be local to the project
+export HF_HOME="${PROJECT_DIR}/.cache/huggingface"
+mkdir -p "${HF_HOME}"
+
 echo "======================================="
 echo "Starting LoKR Alpha Hyperparameter Search" # Updated text
 echo "Fixed Rank: ${RANK}" # Assuming 'rank'
 echo "Alphas to test: ${ALPHAS[@]}"
 echo "Base Output Dir: ${PROJECT_DIR}/${BASE_OUTPUT_DIR}"
+echo "HF Cache Dir: ${HF_HOME}"
 echo "======================================="
 
 
@@ -66,7 +71,7 @@ MAX_PROMPTS=25
 SEED=42
 GUIDANCE_SCALE=7.5
 INFERENCE_STEPS=30
-PRETRAINED_MODEL="${PROJECT_DIR}/pretrained_sdxl_model/models--stabilityai--stable-diffusion-xl-base-1.0/snapshots/462165984030d82259a11f4367a4eed129e94a7b" # Use absolute/relative from PROJECT_DIR
+PRETRAINED_MODEL="stabilityai/stable-diffusion-xl-base-1.0" # Use model ID to leverage HF_HOME cache
 USE_UNIQUE_SEEDS=true
 
 # --- Main Loop for Alphas --- #
