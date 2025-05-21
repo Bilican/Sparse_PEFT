@@ -55,6 +55,7 @@ To use this repository, follow these steps:
     bash personalization.sh
     ```
 
+### PEFT Comparison
 <div align="center">
   <img src="assets/peft_comparison.png" width="600">
 </div>
