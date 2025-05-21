@@ -55,6 +55,11 @@ To use this repository, follow these steps:
     bash personalization.sh
     ```
 
+To test other methods it is sufficient to run 
+```bash 
+  bash other_scripts/vera_personalization.sh
+  ```
+
 ### PEFT Comparison
 <div align="center">
   <img src="assets/peft_comparison.png" width="600">
