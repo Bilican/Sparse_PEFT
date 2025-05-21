@@ -25,96 +25,85 @@ from peft.utils import PeftType
 class WaveFTConfig(PeftConfig):
     """
     This is the configuration class to store the configuration of a [`WaveFTModel`].
+    It is used to define the parameters for Wavelet-based Fine-Tuning (WaveFT),
+    an approach that leverages the sparsity of wavelet transforms for parameter-efficient
+    fine-tuning of pretrained models.
 
     Args:
         n_frequency (`int`):
-            Num of learnable frequencies for the Discrete Wave Transform. 'n_frequency' is an integer that is
-            greater than 0 and less than or equal to d^2 (assuming the weight W has dimensions of d by d).
-            Additionally, it is the number of trainable parameters required to update each delta W weight.
-            'n_frequency' will affect the performance and efficiency for PEFT. Specifically, it has little impact on
-            training speed, but higher values of it (typically) result in larger GPU memory costs and better accuracy.
-            With the same `target_modules`, the number of parameters of LoRA is (2*d*r/n_frequency) times that of
-            WaveFT. The following examples of settings regarding 'n_frequency' can be used as reference for users.
-            For NLU tasks with the RoBERTa-large model, adopting 'n_frequency': 1000 can almost achieve similar results
-            as 'r': 8 in LoRA. At this time, the number of parameters of LoRA is about 16 times that of WaveFT. For
-            image classification tasks with Vit-large models, adopting 'n_frequency': 3000 can almost achieve similar
-            results as 'r': 16 in LoRA, where the number of parameters of LoRA is about 11 times that of FourierFT.
+            Number of learnable wavelet coefficients (frequencies) for the Discrete Wavelet Transform (DWT).
+            'n_frequency' is an integer that is greater than 0 and less than or equal to the
+            total number of elements in the original weight matrix (d_out * d_in).
+            This parameter directly controls the number of trainable parameters for each adapted layer.
+            A higher 'n_frequency' generally leads to better performance but also increases
+            GPU memory usage, with a minor impact on training speed.
         scaling (`float`):
-            The scaling value for the delta W matrix. This is an important hyperparameter used for scaling similar to
-            the 'lora_alpha' parameter in the LoRA method. 'scaling' can be determined during the hyperparameter search
-            process. However, if users want to skip this process, one can refer to the settings in the following
-            scenarios. This parameter can be set to 100.0 or 150.0 for both RoBERTa-base and RoBERTa-large models
-            across all NLU (GLUE) tasks. This parameter can be set to 300.0 for both LLaMA family models for all
-            instruction tuning. This parameter can be set to 300.0 for both ViT-base and ViT-large models across all
-            image classification tasks.
+            The scaling factor applied to the reconstructed delta W matrix. This is a crucial hyperparameter, analogous to `lora_alpha` in LoRA. It can be tuned during hyperparameter search. Our default value for SDXL personalization is 25.
         wavelet_family (`str`):
-            The wavelet family to use for the discrete wavelet transform. Defaults to 'db1'. Different wavelet families
-            cause different reductions in matrix size after reconstruction. The model will handle these size differences
-            automatically.
-        use_idwt: bool = field(
-            default=True,
-            metadata={"help": "Whether to use inverse discrete wavelet transform (IDWT). If False, will use the spectrum directly."},
-        )
+            The wavelet family (e.g., 'db1', 'sym2', 'coif1') to use for the DWT and Inverse DWT (IDWT).
+            Defaults to 'db1' (Haar wavelet). Different wavelet families have varying filter lengths which affect the training time substantially
+        use_idwt (`bool`):
+            Set to False for SHiRA.
+            Whether to use the Inverse Discrete Wavelet Transform (IDWT) to reconstruct the delta weights from the learned wavelet coefficients. If `True` (default), the IDWT is applied. If `False`, the learned coefficients are directly used to form a sparse delta weight matrix, which is faster but performs worse for the SDXL personalization task.
         random_loc_seed (`int`):
-            Seed for the random location of the frequencies, i.e., the spectral entry matrix.
+            Seed for determining the random locations of the `n_frequency` learnable wavelet coefficients
+            within the full wavelet coefficient matrix.
         target_modules (`Union[list[str],str]`):
-            List of module names or regex expression of the module names to replace with FourierFT. For example, ['q',
-            'v'] or '.*decoder.*(SelfAttention|EncDecAttention).*(q|v)$'. Only linear layers are supported.
+            List of module names or a regex expression identifying the modules to be adapted with WaveFT.
+            For example, `['q_proj', 'v_proj']` or `'.*decoder.*(SelfAttention|EncDecAttention).*(q|v)$'`.
+            Currently, only linear layers (`torch.nn.Linear`) are supported.
         exclude_modules (`Optional[Union[List[str], str]]`):
-            The names of the modules to not apply the adapter. When passing a string, a regex match will be performed.
-            When passing a list of strings, either an exact match will be performed or it is checked if the name of the
-            module ends with any of the passed strings.
+            List of module names or a regex expression for modules to exclude from WaveFT adaptation.
         fan_in_fan_out (`bool`):
-            Set this to True if the layer to replace stores weight like (fan_in, fan_out).
+            Set to `True` if the weights of the layer to be replaced are stored in `(fan_in, fan_out)`
+            format. Default is `False`.
         bias (`str`):
-            Bias type for FourierFT. Can be 'none', 'all' or 'fourier_only'.
+            Bias type for WaveFT. Can be 'none', 'all', or 'waveft_only'.
+            ('fourier_only' was likely a typo and has been corrected to 'waveft_only' if it implies bias only on adapted parameters)
+            If 'waveft_only', biases are added only to the WaveFT components.
+            If 'all', biases are added to both base and WaveFT components.
+            If 'none', no new biases are added.
         modules_to_save (`list[str]`):
-            List of modules apart from FourierFT layers to be set as trainable and saved in the final checkpoint. For
-            example, in Sequence Classification or Token Classification tasks, the final layer `classifier/score` are
-            randomly initialized and as such need to be trainable and saved.
+            List of modules, in addition to WaveFT layers, that should be marked as trainable
+            and saved in the final checkpoint. Useful for layers like classifiers in sequence
+            or token classification tasks that are randomly initialized and need training.
         layers_to_transform (`Union[list[int],int]`):
-            The layer indexes to transform, is this argument is specified, PEFT will transform only the layers indexes
-            that are specified inside this list. If a single integer is passed, PEFT will transform only the layer at
-            this index.
+            Specific layer indices to transform. If provided, PEFT will only adapt layers at these
+            indices. If a single integer is given, only that layer is transformed.
         layers_pattern (`Optional[Union[List[str], str]]`):
-            The layer pattern name, used only if `layers_to_transform` is different to None and if the layer pattern is not in the common layers pattern. This should target the `nn.ModuleList` of the model, which is often called `'layers'` or `'h'`.
+            Pattern for layer names, used if `layers_to_transform` is specified and the layer
+            pattern is not standard (e.g., not 'layers' or 'h'). This should target the
+            `nn.ModuleList` attribute in the model.
         n_frequency_pattern (`dict`):
-            The mapping from layer names or regexp expression to n_frequency which are different from the default
-            specified. For example, `{model.decoder.layers.0.encoder_attn.k_proj: 1000`}.
+            A dictionary mapping layer names (or regex) to specific `n_frequency` values,
+            overriding the global `n_frequency`. Example: `{"model.decoder.layers.0.encoder_attn.k_proj": 1000}`.
         init_weights (`bool`):
-            The initialization of weights. Set this to False if the weights are initialized to a standard normal distribution. Set this to True if the weights are initialized to zeros.
+            Initialization strategy for the learnable wavelet coefficients (spectrum).
+            If `True` (default), coefficients are initialized to zeros.
+            If `False`, coefficients are initialized from a standard normal distribution scaled by a small factor.
         proportional_parameters (`bool`):
-            Allocate parameters proportionally to each layer's input_dim * output_dim.
+            If `True`, `n_frequency` is allocated proportionally to each layer's
+            `input_dim * output_dim`. Default is `False`.
     """
 
     n_frequency: int = field(
-        default=10368,
+        default=2592, # Default value might need adjustment based on common use cases or paper findings
         metadata={
             "help": (
-                "Num of learnable frequencies for the Discrete Fourier Transform. 'n_frequency' is an integer that is"
-                "greater than 0 and less than or equal to d^2 (assuming the weight W has dimensions of d by d)."
-                "Additionally, it is the number of trainable parameters required to update each delta W weight."
-                "'n_frequency' will affect the performance and efficiency for PEFT. Specifically, it has little impact on"
-                "training speed, but higher values of it (typically) result in larger GPU memory costs and better accuracy."
-                "With the same `target_modules`, the number of parameters of LoRA is (2*d*r/n_frequency) times that of FourierFT."
-                "The following examples of settings regarding 'n_frequency' can be used as reference for users. For NLU"
-                "tasks with the RoBERTa-large model, adopting 'n_frequency': 1000 can almost achieve similar results as"
-                "'r': 8 in LoRA. At this time, the number of parameters of LoRA is about 16 times that of FourierFT."
-                "For image classification tasks with Vit-large models, adopting 'n_frequency': 3000 can almost achieve"
-                "similar results as 'r': 16 in LoRA, where the number of parameters of LoRA is about 11 times that of FourierFT."
+                "Number of learnable wavelet coefficients (frequencies) for the Discrete Wavelet Transform. "
+                "This is an integer that is greater than 0 and less than or equal to the total number of elements in the original weight matrix (d_out * d_in). "
+                "This parameter directly controls the number of trainable parameters for each adapted layer. "
+                "A higher 'n_frequency' generally leads to better performance but also increases GPU memory usage, with a minor impact on training speed."
             )
         },
     )
     scaling: float = field(
-        default=4.0,
+        default=25.0, # Default value seems low based on typical examples, might need adjustment
         metadata={
             "help": (
-                "The scaling value for the delta W matrix. This is an important hyperparameter used for scaling, similar to the"
-                "'lora_alpha' parameter in the LoRA method. 'scaling' can be determined during the hyperparameter search process."
-                "However, if users want to skip this process, one can refer to the settings in the following scenarios."
-                "This parameter can be set to 100.0 or 150.0 for both RoBERTa-base and RoBERTa-large models across all NLU (GLUE) tasks."
-                "This parameter can be set to 300.0 for both LLaMA family models for all instruction tuning."
-                "This parameter can be set to 300.0 for both ViT-base and ViT-large models across all image classification tasks."
+                "Scaling factor for the reconstructed delta W matrix, similar to 'lora_alpha'. "
+                "Tune via hyperparameter search or use suggested defaults: "
+                "RoBERTa (NLU): 100.0-150.0; LLaMA (tuning): 300.0; ViT (classification): 300.0."
             )
         },
     )
@@ -122,46 +111,44 @@ class WaveFTConfig(PeftConfig):
         default="db1",
         metadata={
             "help": (
-                "The wavelet family to use for the discrete wavelet transform. Different wavelet families cause different"
-                "reductions in matrix size after reconstruction. The model will handle these size differences automatically."
+                "Wavelet family for DWT/IDWT (e.g., 'db1', 'sym2'). Affects filter length and reconstruction. "
+                "Size differences are handled automatically if use_idwt is True."
             )
         },
     )
     use_idwt: bool = field(
         default=True,
-        metadata={"help": "Whether to use inverse discrete wavelet transform (IDWT). If False, will use the spectrum directly."},
+        metadata={"help": "If True, use IDWT for reconstruction. If False, use sparse coefficients directly."},
     )
     random_loc_seed: Optional[int] = field(
-        default=777, metadata={"help": "Seed for the random location of the frequencies."}
+        default=777, metadata={"help": "Seed for random selection of learnable wavelet coefficient locations."}
     )
     fan_in_fan_out: bool = field(
         default=False,
-        metadata={"help": "Set this to True if the layer to replace stores weight like (fan_in, fan_out)"},
+        metadata={"help": "Set to True if layer weights are (fan_in, fan_out)."},
     )
     target_modules: Optional[Union[list[str], str]] = field(
         default=None,
         metadata={
             "help": (
-                "List of module names or regex expression of the module names to replace with FourierFT."
-                "For example, ['q', 'v'] or '.*decoder.*(SelfAttention|EncDecAttention).*(q|v)$'. "
-                "Only linear layers are supported."
+                "Modules to adapt with WaveFT (list of names or regex). "
+                "E.g., ['q_proj', 'v_proj'] or '.*decoder.*(q|v)$'. Only linear layers supported."
             )
         },
     )
     exclude_modules: Optional[Union[list[str], str]] = field(
         default=None,
-        metadata={"help": "List of module names or regex expression of the module names to exclude from fourierft."},
+        metadata={"help": "List of module names or regex for modules to exclude from WaveFT adaptation."},
     )
     bias: str = field(
-        default="none", metadata={"help": "Bias type for FourierFT. Can be 'none', 'all' or 'fourier_only'."}
+        default="none", metadata={"help": "Bias type for WaveFT: 'none', 'all', or 'waveft_only'."}
     )
     modules_to_save: Optional[list[str]] = field(
         default=None,
         metadata={
             "help": (
-                "List of modules apart from FourierFT layers to be set as trainable and saved in the final checkpoint. For"
-                " example, in Sequence Classification or Token Classification tasks, the final layer"
-                " `classifier/score` are randomly initialized and as such need to be trainable and saved."
+                "Additional modules (besides WaveFT layers) to train and save. "
+                "E.g., classifier heads."
             )
         },
     )
@@ -169,9 +156,7 @@ class WaveFTConfig(PeftConfig):
         default=None,
         metadata={
             "help": (
-                "The layer indexes to transform, is this argument is specified, PEFT will transform only the layers"
-                " indexes that are specified inside this list. If a single integer is passed, PEFT will transform only"
-                " the layer at this index."
+                "Specific layer indices to adapt. Integer for one layer, list for multiple."
             )
         },
     )
@@ -179,9 +164,8 @@ class WaveFTConfig(PeftConfig):
         default=None,
         metadata={
             "help": (
-                "The layer pattern name, used only if `layers_to_transform` is different to None and if the layer"
-                " pattern is not in the common layers pattern. This should target the `nn.ModuleList` of the "
-                "model, which is often called `'layers'` or `'h'`."
+                "Layer pattern name if `layers_to_transform` is used and pattern is non-standard. "
+                "Targets model's `nn.ModuleList` (e.g., 'layers', 'h')."
             )
         },
     )
@@ -189,21 +173,20 @@ class WaveFTConfig(PeftConfig):
         default_factory=dict,
         metadata={
             "help": (
-                "The mapping from layer names or regexp expression to n_frequency which are different from the default specified."
-                "For example, `{model.decoder.layers.0.encoder_attn.k_proj: 500`}."
+                "Dictionary mapping layer names/regex to specific `n_frequency` values, "
+                "overriding the global `n_frequency`. E.g., {'layer.0.k_proj': 500}."
             )
         },
     )
     proportional_parameters: bool = field(
         default=False,
-        metadata={"help": "Allocate parameters proportionally to each layer's input_dim * output_dim."},
+        metadata={"help": "If True, allocate `n_frequency` proportionally to each layer's input_dim * output_dim."},
     )
     init_weights: bool = field(
         default=True,
         metadata={
             "help": (
-                "The initialization of the Fourier weights. Set this to False if the spectrum should be initialized to a standard normal distribution."
-                "Set this to True if the spectrum should be initialized to zeros."
+                "Initialization of WaveFT learnable coefficients. True for zeros, False for scaled random normal."
             )
         },
     )
