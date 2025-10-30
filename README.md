@@ -1,5 +1,20 @@
-# Sparse_PEFT: Exploring Sparsity for Parameter-Efficient Fine-Tuning | [[Paper]](https://arxiv.org/abs/2505.12532)
+# Exploring Sparsity for Parameter Efficient Fine Tuning Using Wavelets | [[Paper]](https://arxiv.org/abs/2505.12532)
 
+---
+
+## ⚠️ Important Notice
+
+**This repository contains the original research implementation and is maintained for archival and reproducibility purposes only.**
+
+**For production use, please refer to the [HuggingFace PEFT library](https://github.com/huggingface/peft), which includes:**
+- ✅ **Optimized and maintained implementations** of WaveFT and other PEFT methods
+- ✅ **Significantly faster performance** with better memory efficiency
+- ✅ **Active development and community support**
+- ✅ **Integration with the broader HuggingFace ecosystem**
+
+The code in this repository is older and slower compared to the PEFT library implementation. We recommend using the PEFT library for all practical applications.
+
+---
 <div align="center">
   <table>
     <tr>
@@ -29,7 +44,7 @@
 
 ## Overview
 
-This repository contains the implementation and results of our research on sparse parameter-efficient fine-tuning in the wavelet domain. We explore the benefits of incorporating structured sparsity into PEFT approaches to achieve better parameter efficiency while maintaining or improving performance.
+This repository contains the original implementation and results of our research on sparse parameter-efficient fine-tuning in the wavelet domain. We explore the benefits of incorporating structured sparsity into PEFT approaches to achieve better parameter efficiency while maintaining or improving performance.
 
 ## Method
 
